@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35027.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chat-qt-statusServer", "chat-qt-statusServer.vcxproj", "{8438353C-86D4-4530-BFC5-837065E397AC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8438353C-86D4-4530-BFC5-837065E397AC}.Debug|x64.ActiveCfg = Debug|x64
+		{8438353C-86D4-4530-BFC5-837065E397AC}.Debug|x64.Build.0 = Debug|x64
+		{8438353C-86D4-4530-BFC5-837065E397AC}.Debug|x86.ActiveCfg = Debug|Win32
+		{8438353C-86D4-4530-BFC5-837065E397AC}.Debug|x86.Build.0 = Debug|Win32
+		{8438353C-86D4-4530-BFC5-837065E397AC}.Release|x64.ActiveCfg = Release|x64
+		{8438353C-86D4-4530-BFC5-837065E397AC}.Release|x64.Build.0 = Release|x64
+		{8438353C-86D4-4530-BFC5-837065E397AC}.Release|x86.ActiveCfg = Release|Win32
+		{8438353C-86D4-4530-BFC5-837065E397AC}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {31568744-00AC-49E6-B925-3560FBE16B96}
+	EndGlobalSection
+EndGlobal
