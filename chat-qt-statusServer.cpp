@@ -1,20 +1,66 @@
 ﻿// chat-qt-statusServer.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 
-#include <iostream>
+#include "const.h"
+#include "ConfigMgr.h"
+#include <thread>
+#include "StatusServiceImpl.h"
 
-int main()
+void RunServer()
 {
-    std::cout << "Hello World!\n";
+    auto& gCfgMgr = ConfigMgr::Inst();
+    std::string server_address = gCfgMgr["StatusServer"]["Host"] + ":" + gCfgMgr["StatusServer"]["Port"];
+    StatusServiceImpl service;
+
+    grpc::ServerBuilder builder;
+    // 监听端口和添加服务
+    builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
+    builder.RegisterService(&service);
+
+    // 构建并启动grpc服务器
+    std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
+    std::cout << "Server listening on " << server_address << std::endl;
+
+    // 创建Boost.Asio的io_context
+    boost::asio::io_context io_context;
+    // 创建signal_set 用于捕获SIGINT
+    // SIGINT是中断信号，通常由用户按下Ctrl+C产生，用于请求程序中断。
+    // SIGTERM是终止信号，用于请求程序正常终止。
+    // 通过将这些信号添加到signal_set中，程序可以在这些信号发生时得到通知
+    boost::asio::signal_set signals(io_context, SIGINT, SIGTERM);
+
+    // 设置异步等待SIGINT信号
+    signals.async_wait([&server, &io_context](const boost::system::error_code error, int signal_number) {
+        if (!error)
+        {
+            std::cout << "shut down server" << std::endl;
+            // 关闭服务器
+            server->Shutdown();
+            // 停止io_context
+            io_context.stop();
+        }
+    });
+
+    // 在单独的线程中运行io_context
+    std::thread([&io_context]() {
+        io_context.run();
+    }).detach();
+
+    // 等待服务器关闭
+    server->Wait();
 }
 
-// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
-// 调试程序: F5 或调试 >“开始调试”菜单
+int main(int argc, char** argv)
+{
+    try
+    {
+        RunServer();
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Error=" << e.what() << std::endl;
+        return EXIT_FAILURE;
+    }
+    return 0;
+}
 
-// 入门使用技巧: 
-//   1. 使用解决方案资源管理器窗口添加/管理文件
-//   2. 使用团队资源管理器窗口连接到源代码管理
-//   3. 使用输出窗口查看生成输出和其他消息
-//   4. 使用错误列表窗口查看错误
-//   5. 转到“项目”>“添加新项”以创建新的代码文件，或转到“项目”>“添加现有项”以将现有代码文件添加到项目
-//   6. 将来，若要再次打开此项目，请转到“文件”>“打开”>“项目”并选择 .sln 文件
